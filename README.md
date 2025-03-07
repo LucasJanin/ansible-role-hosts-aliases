@@ -15,39 +15,38 @@ Role Variables
 
 Required variables:
 
-```yaml
-# Host information lists - these should be populated from inventory or vars
-dev_hostnames: []         # List of hostnames to create aliases for
-dev_ips: []               # List of IPs corresponding to hostnames
-dev_alias: []             # List of short aliases for each host
-dev_vspaths: []           # List of paths to open in VSCode for each host
-dev_ansible_ssh_users: [] # List of SSH users for each host
+Host information lists - these should be populated from inventory or vars
 
-# Management host information
-user: "your_username"     # Username on the management host
-host: "your_hostname"   # Hostname of the management host
-home: "/path/to/home/"  # Home directory path on the management host
-```
+| Variable | Type | Description | Default |
+|----------|------|-------------|---------|
+|dev_hostnames|area|List of hostnames to create aliases for||
+|dev_ips|area|List of IPs corresponding to hostnames||
+|dev_alias|area|List of short aliases for each host||
+|dev_vspaths|area|List of paths to open in VSCode for each host||
+|dev_ansible_ssh_users|area|List of SSH users for each host||
+
+Management host information
+
+| Variable | Type | Description | Default |
+|----------|------|-------------|---------|
+|user|str|Username on the management host||
+|host|str|Hostname of the management host||
+|home|str|Home directory path on the management host||
 
 Optional variables with defaults:
 
-```yaml
-# File paths
-bash: ".bashrc"                             # Bash profile file to modify
-bash_hosts_aliases: ".bash_hosts_aliases" # File to store the aliases
-
-# Editor configuration
-editor_path: "code"                         # Path to the VSCode executable
-create_editor_aliases: true                 # Whether to create VSCode aliases
-
-# Comment for the aliases file
-comment: "Hosts Aliases"
-```
+| Variable | Type | Description | Default |
+|----------|------|-------------|---------|
+|bash|str|Bash profile file to modify|".bashrc"|
+|bash_hosts_aliases|str|File to store the aliases|".bash_hosts_aliases"|
+|editor_path|str|Path to the VSCode executable|"code"|
+|create_editor_aliases|bool|Whether to create VSCode aliases|true|
+|comment|str|Comment for the aliases file|"Hosts Aliases"|
 
 Dependencies
 ------------
 
-None.
+None
 
 Example Playbook
 ----------------
@@ -89,7 +88,7 @@ Example Playbook
 ```
 
 Inventory Example
-----------------
+-----------------
 
 Here's an example inventory file format that works with this role:
 
@@ -103,17 +102,38 @@ homepage    ansible_host="192.168.1.12"   alias="hp"    vspath="/opt/homepage/co
 ansible_user="ansible"
 ```
 
+Testing
+-------
+
+The role includes a test playbook and inventory that can be used to verify functionality. To run the tests:
+
+```bash
+cd ansible-role-hosts-aliases
+ansible-playbook -i tests/inventory.ini tests/test.yml
+```
+
+The test creates bash aliases in a temporary directory to avoid modifying your actual bash profile during testing.
+
+```bash
+cat /tmp/test_bash_hosts_aliases
+```
+
 After running the role, you'll have aliases like:
 
 ```bash
-# SSH aliases
-alias ssha='ssh ansible@ansible'
-alias sshd='ssh ansible@docker'
-alias sshhp='ssh ansible@homepage'
+# .bashrc_hosts_aliases
+# Hosts Aliases
 
-# VSCode aliases
+# ansible ---- 192.168.1.10
+alias ssha='ssh ansible@ansible'
 alias vsa='code --folder-uri "vscode-remote://ssh-remote+ansible@ansible/home/ansible/ansible"'
+
+# docker ---- 192.168.1.11
+alias sshd='ssh ansible@docker'
 alias vsd='code --folder-uri "vscode-remote://ssh-remote+ansible@docker/data/docker"'
+
+# homepage ---- 192.168.1.12
+alias sshhp='ssh ansible@homepage'
 alias vshp='code --folder-uri "vscode-remote://ssh-remote+ansible@homepage/opt/homepage/config"'
 ```
 
