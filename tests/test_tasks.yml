@@ -1,0 +1,36 @@
+# Test tasks file for ansible-role-hosts-aliases
+
+- name: Check if bash profile exists
+  stat:
+    path: "{{ home }}{{ bash }}"
+  register: bash_profile_stat
+
+- name: Create bash profile if it doesn't exist
+  file:
+    path: "{{ home }}{{ bash }}"
+    state: touch
+    mode: '0644'
+  when: not bash_profile_stat.stat.exists
+
+- name: Read current bash profile
+  slurp:
+    src: "{{ home }}{{ bash }}"
+  register: bash_profile_content
+  failed_when: false  # Don't fail in test environment
+
+- name: Add source command with comment to bash profile
+  blockinfile:
+    path: "{{ home }}{{ bash }}"
+    block: |
+      # {{ bash_hosts_aliases }}
+      source ~/{{ bash_hosts_aliases }}
+    marker: "# {mark} HOSTS ALIASES MANAGED BY ANSIBLE ROLE"
+    state: present
+  when: bash_profile_content.failed is not defined or not bash_profile_content.failed
+
+- name: Create hosts aliases file from template
+  template:
+    src: "../templates/hosts_aliases.j2"
+    dest: "{{ home }}{{ bash_hosts_aliases }}"
+    mode: '0644'
+  register: aliases_created
