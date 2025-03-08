@@ -1,12 +1,15 @@
+---
+# File: meta/main.yml
+# Description: Role metadata for Ansible Galaxy
+# Author: Lucas Janin
+# Date: 2025-03-08
+
 galaxy_info:
   author: Lucas Janin
   description: Creates hosts aliases for ssh and vscode remote ssh
-  company:
-
+  company: lucasjanin.com
   issue_tracker_url: https://github.com/LucasJanin/ansible-role-hosts-aliases/issues
-
   license: MIT
-
   min_ansible_version: 2.1
 
   galaxy_tags:
