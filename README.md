@@ -1,17 +1,23 @@
-Ansible Role: Hosts Aliases
-=========================
+# Ansible Role: Hosts Aliases
 
 This Ansible role creates SSH and VSCode Remote SSH aliases for hosts in your inventory, making it easier to connect to remote servers. It adds these aliases to a user's bash profile on a management host.
 
-Requirements
-------------
+## Features
+
+- Add all host to an bash_hosts_aliases
+- Alias of ssh access to the host
+- Alias of editor access to the host (optional)
+
+## Screenshot
+![Hosts Aliases](images/hosts-aliases.png )
+
+## Requirements
 
 - Ansible 2.1 or higher
 - A management host where the aliases will be created (typically your local machine)
 - Remote hosts that you want to connect to via SSH and VSCode Remote SSH
 
-Role Variables
---------------
+## Role Variables
 
 Required variables:
 
@@ -43,13 +49,11 @@ Optional variables with defaults:
 |create_editor_aliases|bool|Whether to create VSCode aliases|true|
 |comment|str|Comment for the aliases file|"Hosts Aliases"|
 
-Dependencies
-------------
+## Dependencies
 
 None
 
-Example Playbook
-----------------
+## Example Playbook
 
 ```yaml
 - name: Create host aliases on management host
@@ -87,8 +91,7 @@ Example Playbook
         create_editor_aliases: true
 ```
 
-Inventory Example
------------------
+## Inventory Example
 
 Here's an example inventory file format that works with this role:
 
@@ -102,8 +105,7 @@ homepage    ansible_host="192.168.1.12"   alias="hp"    vspath="/opt/homepage/co
 ansible_user="ansible"
 ```
 
-Testing
--------
+## Testing
 
 The role includes a test playbook and inventory that can be used to verify functionality. To run the tests:
 
@@ -137,13 +139,11 @@ alias sshhp='ssh ansible@homepage'
 alias vshp='code --folder-uri "vscode-remote://ssh-remote+ansible@homepage/opt/homepage/config"'
 ```
 
-License
--------
+## License
 
 MIT
 
-Contributing
-------------
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
@@ -153,8 +153,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-Author Information
-------------------
+## Author Information
 
 - Lucas Janin
 - https://lucasjanin.com
