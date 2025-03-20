@@ -19,19 +19,7 @@ This Ansible role creates SSH and VSCode Remote SSH aliases for hosts in your in
 
 ## Role Variables
 
-Required variables:
-
-Host information lists - these should be populated from inventory or vars
-
-| Variable | Type | Description | Default |
-|----------|------|-------------|---------|
-|dev_hostnames|area|List of hostnames to create aliases for||
-|dev_ips|area|List of IPs corresponding to hostnames||
-|dev_alias|area|List of short aliases for each host||
-|dev_vspaths|area|List of paths to open in VSCode for each host||
-|dev_ansible_ssh_users|area|List of SSH users for each host||
-
-Management host information
+Required management host information
 
 | Variable | Type | Description | Default |
 |----------|------|-------------|---------|
@@ -53,6 +41,18 @@ Optional variables with defaults:
 
 None
 
+# New Method
+
+This role now directly uses Ansible's host variables instead of requiring separate lists. This simplifies configuration and makes the role more maintainable.
+
+The role now uses:
+	•	ansible_play_hosts_all instead of dev_hostnames
+	•	hostvars[item].ansible_host instead of dev_ips
+	•	hostvars[item].alias instead of dev_alias
+	•	hostvars[item].vspath instead of dev_vspaths
+	•	hostvars[item].ansible_user instead of dev_ansible_ssh_users
+This eliminates the need for pre-tasks that extract values from the inventory into separate lists, making your playbooks simpler and more maintainable.
+
 ## Example Playbook
 
 ```yaml
@@ -63,21 +63,6 @@ None
     management_user: "you"
     management_host: "your-mac"
     management_home: "/Users/you/"
-  pre_tasks:
-    - name: Set aliases from inventory
-      set_fact:
-        dev_alias: "{{ dev_alias + [hostvars[item].alias | default(item)] }}"
-      loop: "{{ dev_hostnames }}"
-      
-    - name: Set vspaths from inventory
-      set_fact:
-        dev_vspaths: "{{ dev_vspaths + [hostvars[item].vspath | default('/home/' + hostvars[item].ansible_user + '/')] }}"
-      loop: "{{ dev_hostnames }}"
-      
-    - name: Set SSH users from inventory
-      set_fact:
-        dev_ansible_ssh_users: "{{ dev_ansible_ssh_users + [hostvars[item].ansible_user | default('ansible')] }}"
-      loop: "{{ dev_hostnames }}"
   tasks:
     - name: Include hosts aliases role
       include_role:
@@ -145,16 +130,16 @@ MIT
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create a feature branch (`git checkout -b feature/my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin feature/my-new-feature`)
+5. Create a new Pull Request
 
 ## Author Information
 
-- Lucas Janin
-- https://lucasjanin.com
-- https://mastodon.social/@lucas3d
+Lucas Janin
+- Mastodon: [https://mastodon.social/@lucas3d](https://mastodon.social/@lucas3d)
+- Website: [https://www.lucasjanin.com](https://www.lucasjanin.com)
+- GitHub: [github.com/lucasjanin](https://github.com/lucasjanin)
+- LinkedIn: [linkedin.com/in/lucasjanin](https://linkedin.com/in/lucasjanin)
