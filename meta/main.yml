@@ -6,11 +6,12 @@
 
 galaxy_info:
   author: Lucas Janin
+  namespace: lucasjanin
   description: Creates hosts aliases for ssh and vscode remote ssh
   company: lucasjanin.com
   issue_tracker_url: https://github.com/LucasJanin/ansible-role-hosts-aliases/issues
   license: MIT
-  min_ansible_version: 2.1
+  min_ansible_version: "2.12"
 
   galaxy_tags:
     - development
