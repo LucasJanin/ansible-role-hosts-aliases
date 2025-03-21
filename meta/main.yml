@@ -5,6 +5,7 @@
 # Date: 2025-03-08
 
 galaxy_info:
+  role_name: hosts_aliases
   author: Lucas Janin
   description: Creates hosts aliases for ssh and vscode remote ssh
   company: lucasjanin.com
