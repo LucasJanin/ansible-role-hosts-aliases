@@ -1,11 +1,11 @@
 # {{ bash_hosts_aliases }}
 # {{ comment }}
 
-{% for hostname, ip, alias, vspath, ssh_user in dev_hostnames | zip(dev_ips, dev_alias, dev_vspaths, dev_ansible_ssh_users) %}
-# {{ hostname }} ----- {{ ip }}
-alias ssh{{ alias }}='ssh {{ ssh_user }}@{{ hostname }}'
+{% for host in ansible_play_hosts_all %}
+# {{ host }} ----- {{ hostvars[host].ansible_host | default('') }}
+alias ssh{{ hostvars[host].alias | default(host) }}='ssh {{ hostvars[host].ansible_user | default("ansible") }}@{{ host }}'
 {% if create_editor_aliases | default(true) | bool %}
-alias vs{{ alias }}='{{ editor_path }} --folder-uri "vscode-remote://ssh-remote+{{ ssh_user }}@{{ hostname }}{{ vspath }}"'
+alias vs{{ hostvars[host].alias | default(host) }}='{{ editor_path }} --folder-uri "vscode-remote://ssh-remote+{{ hostvars[host].ansible_user | default("ansible") }}@{{ host }}{{ hostvars[host].vspath | default("") }}"'
 
 {% else %}
 

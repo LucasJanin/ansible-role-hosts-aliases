@@ -1,16 +1,9 @@
 ---
 # defaults file for ansible-role-hosts-aliases
 
-# Default empty lists for host information
-dev_hostnames: []                           # List of hostnames to create aliases for
-dev_ips: []                                 # List of IPs corresponding to hostnames
-dev_alias: []                               # List of short aliases for each host
-dev_vspaths: []                             # List of paths to open in VSCode for each host
-dev_ansible_users: []                       # List of SSH users for each host
-
 # File paths
 bash: ".bashrc"                             # Bash profile file to modify
-bash_hosts_aliases: ".bash_hosts_aliases"   # File to store the aliases
+bash_hosts_aliases: ".bashrc_hosts_aliases" # File to store the aliases
 
 # Editor configuration
 editor_path: "code"                         # Path to the VSCode executable

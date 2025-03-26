@@ -1,15 +1,8 @@
 ---
 - name: Test hosts aliases role
   hosts: localhost
-  gather_facts: false
+  gather_facts: true
   vars:
-    # Use actual hosts from inventory
-    dev_hostnames: "{{ groups['all'] | difference(['localhost']) }}"
-    dev_ips: []
-    dev_alias: []
-    dev_vspaths: []
-    dev_ansible_ssh_users: []
-
     # Management host information (using /tmp for testing)
     user: "{{ ansible_user_id }}"
     host: "localhost"
@@ -28,26 +21,17 @@
         state: touch
         mode: '0644'
 
-    # Extract IPs from inventory
-    - name: Set IPs from inventory
-      ansible.builtin.set_fact:
-        dev_ips: "{{ dev_ips + [hostvars[item].ansible_host | default('127.0.0.1')] }}"
-      loop: "{{ dev_hostnames }}"
-
-    - name: Set aliases from inventory
-      ansible.builtin.set_fact:
-        dev_alias: "{{ dev_alias + [hostvars[item].alias | default(item)] }}"
-      loop: "{{ dev_hostnames }}"
-
-    - name: Set vspaths from inventory
-      ansible.builtin.set_fact:
-        dev_vspaths: "{{ dev_vspaths + [hostvars[item].vspath | default('/home/' + hostvars[item].ansible_user + '/')] }}"
-      loop: "{{ dev_hostnames }}"
-
-    - name: Set SSH users from inventory
-      ansible.builtin.set_fact:
-        dev_ansible_ssh_users: "{{ dev_ansible_ssh_users + [hostvars[item].ansible_user | default('ansible')] }}"
-      loop: "{{ dev_hostnames }}"
+    # Display discovered host information for testing
+    - name: Display discovered host information
+      ansible.builtin.debug:
+        msg:
+          - "Host: {{ item }}"
+          - "  IP           : {{ hostvars[item].ansible_host | default('') }}"
+          - "  Ansible User : {{ hostvars[item].ansible_user | default('') }}"
+          - "  Alias        : {{ hostvars[item].alias | default('') }}"
+          - "  VS Path      : {{ hostvars[item].vspath | default('') }}"
+      loop: "{{ groups['all'] | difference(['localhost']) }}"
+      run_once: true
 
   tasks:
     - name: Include test tasks

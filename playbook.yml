@@ -1,0 +1,33 @@
+# File: playbook.yml
+# Description: Playbook to setup hosts aliases
+# Author: Lucas Janin
+# Version: 1.0
+---
+- name: Auto setup hosts on Unifi, PiHole and fastroom
+  hosts: "{{ target_hosts | default('all') }}"
+  gather_facts: true
+  become: true
+  become_method: ansible.builtin.sudo
+  strategy: linear
+
+  tasks:
+    - name: Display discovered host information individually
+      ansible.builtin.debug:
+        msg:
+          - "Host: {{ item }}"
+          - "  IP           : {{ hostvars[item].ansible_host | default('') }}"
+          - "  Ansible User : {{ hostvars[item].ansible_user | default('') }}"
+          - "  Alias        : {{ hostvars[item].alias | default('') }}"
+          - "  VS Path      : {{ hostvars[item].vspath | default('') }}"
+      loop: "{{ ansible_play_hosts_all }}"
+      run_once: true
+
+    # Include hosts aliases role to ansible
+    - name: Include hosts aliases role to ansible
+      ansible.builtin.include_role:
+        name: ansible-role-hosts-aliases
+      vars:
+        user: "ansible"
+        host: "ansible"
+        home: "/home/ansible/"
+      run_once: true
